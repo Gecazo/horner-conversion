@@ -21,6 +21,7 @@ int main() {
 
 
     fclose(file_to_read);
+    fclose(file_to_write)
     return 0;   
 
 };
