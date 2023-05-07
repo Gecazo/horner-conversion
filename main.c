@@ -1,5 +1,8 @@
 #include <stdio.h>
-#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+
 
 int main() {    
 
@@ -11,17 +14,47 @@ int main() {
         return -1;
     };
 
-    char c;
-    while ((c=fgetc(file_to_read)) != EOF){
-        
-        // TODO: Implement converting to the binary
+    char chunk[128];
 
-        fputc(c, file_to_write);
+    // Store the chunks of text into a line buffer
+    size_t len = sizeof(chunk);
+    char *line = malloc(len);
+
+    if (line == NULL){
+        printf("Unable to allocate memmory!\n");
+        return -1;
     };
 
+    line[0] = '\0';
+
+    while (fgets(chunk, sizeof(chunk), file_to_read) != NULL){
+        size_t len_used = strlen(line);
+        size_t chunk_used = strlen(chunk);
+
+        if (len - len_used < chunk_used){
+            len *= 2;
+            if((line = realloc(line, len)) == NULL){
+                printf("Unable to reallocate memory!\n");
+                free(line);
+                return(-1);
+            };
+        };
+
+        strncpy(line + len_used, chunk, len - len_used);
+        len_used += chunk_used;
+
+        if(line[len_used - 1] == '\n'){
+            // TODO: Implement converting to the binary
+            fputs(line, file_to_write);
+        };
+
+        line[0] = '\0';
+    };
+
+    free(line);
 
     fclose(file_to_read);
-    fclose(file_to_write)
+    fclose(file_to_write);
     return 0;   
 
 };
