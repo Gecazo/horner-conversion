@@ -46,9 +46,8 @@ int main() {
         if(line[len_used - 1] == '\n'){
             // TODO: Implement converting to the binary
             fputs(line, file_to_write);
+            line[0] = '\0';
         };
-
-        line[0] = '\0';
     };
 
     free(line);
